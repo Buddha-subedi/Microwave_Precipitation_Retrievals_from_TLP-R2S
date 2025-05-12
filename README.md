@@ -5,3 +5,4 @@ into the retrieval process and allows the fusion of multi-satellite observations
 while conditioning the results to some surface and surface type variables.
 
 ## Dataset
+The dataset for training the networks and retrieving sample orbits is available [here](https://drive.google.com/drive/u/0/folders/1Njpyd_nWbNwxumzqJXwW5GhjkMftDVzW).

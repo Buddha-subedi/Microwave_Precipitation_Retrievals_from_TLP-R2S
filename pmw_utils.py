@@ -94,59 +94,6 @@ def plot_confusion_matrix(y_test, y_test_pred, xlabel, ylabel, title):
     plt.ylabel(ylabel, fontweight='bold')
     plt.title(title, fontweight='bold')
     plt.show()
-    
-
-
-
-
-
-
-
-
-
-def compute_cdf_and_metrics(y, x, y2):
-    import scipy.stats as stats
-    from scipy.interpolate import interp1d
-    import numpy as np
-    import pandas as pd
-    from scipy.stats import gaussian_kde
-    from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-
-    # Convert input data to Pandas Series
-    y_series = pd.Series(y)
-    x_lrn = pd.Series(x)
-    y_series = y_series.clip(lower=x_lrn.min())
-    
-
-    # Compute empirical CDF of the estimated rate (y_series)
-    cumfreq_result = stats.cumfreq(y_series, numbins=len(y_series))
-    Fi1 = cumfreq_result.cumcount
-    xi1 = cumfreq_result.lowerlimit + np.arange(len(Fi1)) * cumfreq_result.binsize
-    Fi1 = Fi1 / max(Fi1)  # Normalize to get CDF
-
-    # Compute empirical inverse CDF of the predicted estimate rate (x_lrn)
-    cumfreq_result_2 = stats.cumfreq(x_lrn, numbins=len(x_lrn))
-    Fi2 = cumfreq_result_2.cumcount
-    xi2 = cumfreq_result_2.lowerlimit + np.arange(len(Fi2)) * cumfreq_result_2.binsize
-    Fi2 = Fi2 / max(Fi2)  # Normalize to get CDF
-
-    
-    # Compute interpolated CDF for the estimated data
-    # Actually cdf_x is a set of probabilities at which you want to find the bias corrected estimated value
-    cdf_x = interp1d(xi1, Fi1, kind='linear', fill_value="extrapolate")(y_series)
-    
-    # Map the estimated data into the observed rain rate of DPR
-    x_cdf = interp1d(Fi2, xi2, kind='linear', fill_value="extrapolate")(cdf_x)
-    x_cdf = np.nan_to_num(x_cdf, nan=0.01) 
-
-    # Calculate metrics
-    bias = np.mean(y2 - x_cdf)
-    RMSE = np.sqrt(np.mean((x_cdf - y2) ** 2))
-    MAE = np.mean(np.abs(x_cdf - y2))
-    corr = np.corrcoef(x_cdf, y2)[0, 1]
-    R2 = corr ** 2
-
-    return x_cdf, bias, RMSE, MAE, corr, np.column_stack((xi2, Fi2)), np.column_stack((xi1, Fi1))
 
 
 

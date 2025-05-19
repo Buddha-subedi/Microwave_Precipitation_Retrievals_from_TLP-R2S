@@ -1,4 +1,4 @@
-# Boosted Transfer Learning for Passive Microwave Retrtievals
+# Boosted Transfer Learning for Passive Microwave Retrievals
 
 This repository represents the development of an algorithm, called the Boosted tRansfer-leArning for PMW precipitatioN Retrievals(B-RAINS). The algorithm relies on integrating the information content from Earth System Models (ESMs)
 into the retrieval process and allows the fusion of multi-satellite observations across varying spatial and temporal resolutions through meta model learning. The algorithm first detects the precipitation phase and then estimates its rate,

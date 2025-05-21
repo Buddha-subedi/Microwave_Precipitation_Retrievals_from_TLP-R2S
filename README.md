@@ -6,7 +6,7 @@ into the retrieval process and allows the fusion of multi-satellite observations
 while conditioning the results to some atmospheric and surface-type variables.
 
 <div style="display: flex; justify-content: center;">
-  <img src="images/Fig_01.png" width="700" />
+  <img src="images/Fig_01.png" width="600" />
 </div>
 
 

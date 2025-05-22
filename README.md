@@ -129,10 +129,13 @@ booster = xgb.train(
     feval=f1_eval_all_classes
 )
 ```
-<div style="text-align: center;">
-    <img src="images\Fig_02.png" alt="Training for ERA5-CPR classifier basae learner" width="300"/>
-    <p><em>F1 score of Snow for ERA5 and CPR datasets during the training in Stage 2.</em></p>
-</div>
+<p align="center">
+  <img src="images/Fig_02.png" alt="Training for ERA5-CPR classifier base learner" width="300" />
+</p>
+<p align="center">
+  <em>F1 score of Snow for ERA5 and CPR datasets during the training in Stage 2.</em>
+</p>
+
 
 <a name="44"></a> <br>
  ### Load the B-RAINS model

@@ -156,6 +156,16 @@ rain_rate_booster_tl = xgb.Booster()
 rain_rate_booster_tl.load_model(os.path.join(model_dir, 'xgb_tl_rain_rate.json'))
 ```
 
-
+<a name="45"></a> <br>
+ ### Orbital Retrievals
+```python
+[phase, rain, snow, latitude, longitude] = BRAINS_model(file_path, era5_dpr_base_learner, era5_cpr_base_learner, meta_model, 
+                     snow_rate_booster_tl, rain_rate_booster_tl, 
+                     df_cdf_match_rain, df_cdf_match_snow);
+```
+<div style="text-align: center;">
+    <img src="images\Fig_08.png" alt="Training for ERA5-CPR classifier basae learner" width="300"/>
+    <p><em>Brightness temperatures from GMI (a--d) and precipitation retrievals from B-RAINS (e), GPROF (f), DPR (g), and ERA5 (h) for orbit 044780 on January 15, 2022, capturing an extratropical cyclone over the North Atlantic Ocean and the Canadian provinces of Nova Scotia and New Brunswick..</em></p>
+</div>
 ## Dataset
 The dataset for training the networks and retrieving sample orbits is available [here](https://drive.google.com/drive/u/0/folders/1Njpyd_nWbNwxumzqJXwW5GhjkMftDVzW).

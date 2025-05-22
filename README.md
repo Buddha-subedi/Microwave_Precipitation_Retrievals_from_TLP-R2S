@@ -57,9 +57,20 @@ for name, df, sep in zip(
     print(f"Clear: {counts.get(0,0)}, Rain: {counts.get(1,0)}, Snow: {counts.get(2,0)}")
     if sep: print(sep)
 ```
+              **ERA5 Samples for Classification**
+              Total samples for classification: 7000000
+              Clear: 3500000, Rain: 2500000, Snow: 1000000
+              ##############################
+              **CPR Samples for Classification**
+              Total samples for classification: 240800
+              Clear: 120400, Rain: 86000, Snow: 34400
+              ##############################
+              **DPR Samples for CLassification**
+              Total samples for classification: 2800000
+              Clear: 1400000, Rain: 1000000, Snow: 400000
 
-
-To load the B-RAINS model, use the following code
+<a name="42"></a> <br>
+ ### Load the B-RAINS model
 ```python
 model_dir = r'G:\Shared drives\SAFL Ebtehaj Group\Buddha Research\Research 1\model'
 

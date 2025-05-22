@@ -58,8 +58,6 @@ for name, df, sep in zip(
     print(f"Clear: {counts.get(0,0)}, Rain: {counts.get(1,0)}, Snow: {counts.get(2,0)}")
     if sep: print(sep)
 ```
-**Example Output:**
-
     **ERA5 Samples for Classification**
     Total samples for classification: 7000000
     Clear: 3500000, Rain: 2500000, Snow: 1000000

@@ -164,7 +164,7 @@ rain_rate_booster_tl.load_model(os.path.join(model_dir, 'xgb_tl_rain_rate.json')
                      df_cdf_match_rain, df_cdf_match_snow);
 ```
 <div style="text-align: center;">
-    <img src="images\Fig_08.png" alt="Training for ERA5-CPR classifier basae learner" width="300"/>
+    <img src="images\Fig_08.png" alt="Training for ERA5-CPR classifier basae learner" width="700"/>
     <p><em>Brightness temperatures from GMI (a--d) and precipitation retrievals from B-RAINS (e), GPROF (f), DPR (g), and ERA5 (h) for orbit 044780 on January 15, 2022, capturing an extratropical cyclone over the North Atlantic Ocean and the Canadian provinces of Nova Scotia and New Brunswick..</em></p>
 </div>
 ## Dataset

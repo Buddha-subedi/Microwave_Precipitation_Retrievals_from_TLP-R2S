@@ -168,4 +168,4 @@ rain_rate_booster_tl.load_model(os.path.join(model_dir, 'xgb_tl_rain_rate.json')
     <p><em>Brightness temperatures from GMI (a--d) and precipitation retrievals from B-RAINS (e), GPROF (f), DPR (g), and ERA5 (h) for orbit 044780 on January 15, 2022, capturing an extratropical cyclone over the North Atlantic Ocean and the Canadian provinces of Nova Scotia and New Brunswick..</em></p>
 </div>
 ## Dataset
-The dataset for training the networks and retrieving sample orbits is available [here](https://drive.google.com/drive/u/0/folders/1Njpyd_nWbNwxumzqJXwW5GhjkMftDVzW).
+The dataset for training the networks and retrieving sample orbits is available here: (https://drive.google.com/drive/folders/1vtrSuf4CKG24wHklNTMDc1fL-drr9oRN?dmr=1&ec=wgc-drive-hero-goto).

@@ -71,7 +71,66 @@ for name, df, sep in zip(
     Clear: 1400000, Rain: 1000000, Snow: 400000
 
 
-<a name="42"></a> <br>
+<a name="43"></a> <br>
+ ### Train the B-RAINS Model
+B-RAINS Model has 4 base learners. The hyperparameters and snip of code adopted for stage 1 and stage 2 for the ERA5-CPR phase detection is provided below
+
+```python
+#stage 1
+params = {
+    'objective': 'multi:softmax',
+    'num_class': 3,
+    'eval_metric': 'merror',
+    'reg_alpha': 0.095,
+    'reg_lambda': 7.843,
+    'max_depth': 18,
+    'num_parallel_tree': 3,
+    'learning_rate': 0.330808,
+    'gamma': 0.661776,
+    'verbosity': 0
+}
+
+booster_era5 = xgb.train(
+    params=params,
+    dtrain=dtrain,
+    evals=evals,
+    num_boost_round=93,
+    verbose_eval=True
+)
+#stage 2
+classes = np.unique(df_70_train_cpr['Prcp flag'])                         
+class_weights = {0: 1, 1: 1.167, 2: 1.766}
+sample_weights_70 = df_70_train_cpr['Prcp flag'].map(lambda x: class_weights[classes.tolist().index(x)])
+# Set parameters
+params = {
+    'objective': 'multi:softmax',
+    'num_class': 3,
+    'eval_metric': 'merror',
+    'subsample': 0.5,
+    'reg_alpha': 6.948,
+    'reg_lambda': 5.0278,
+    'max_depth': 18,
+    'num_parallel_tree': 6,
+    'learning_rate': 0.018,
+    'gamma': 0.32,
+    'verbosity': 0
+}
+
+# Train with the new data (booster here is the final model that is first trained on coarse
+# resolution information from ERA5 and then finetuned on fine resolution satellite information)
+booster = xgb.train(
+    params,
+    dtrain_cpr,
+    num_boost_round=182,
+    evals=evals,
+    xgb_model=booster_era5,
+    verbose_eval=True,
+    feval=f1_eval_all_classes
+)
+```
+
+
+<a name="44"></a> <br>
  ### Load the B-RAINS model
 ```python
 model_dir = r'G:\Shared drives\SAFL Ebtehaj Group\Buddha Research\Research 1\model'

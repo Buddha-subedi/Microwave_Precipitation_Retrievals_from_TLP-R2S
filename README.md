@@ -130,7 +130,10 @@ booster = xgb.train(
     feval=f1_eval_all_classes
 )
 ```
-
+<div style="text-align: center;">
+    <img src="images\Fig_02.png" alt="Training for ERA5-CPR classifier basae learner" width="300"/>
+    <p><em>F1 score of Snow for ERA5 and CPR datasets during the training in Stage 2.</em></p>
+</div>
 
 <a name="44"></a> <br>
  ### Load the B-RAINS model
@@ -152,10 +155,7 @@ snow_rate_booster_tl.load_model(os.path.join(model_dir, 'xgb_tl_snow_rate.json')
 rain_rate_booster_tl = xgb.Booster()
 rain_rate_booster_tl.load_model(os.path.join(model_dir, 'xgb_tl_rain_rate.json'))
 ```
-<div style="text-align: center;">
-    <img src="images\Fig_02.png" alt="Training for Savannas land cover type" width="300"/>
-    <p><em>F1 score of Snow for ERA5 and CPR datasets during the training in Stage 2.</em></p>
-</div>
+
 
 ## Dataset
 The dataset for training the networks and retrieving sample orbits is available [here](https://drive.google.com/drive/u/0/folders/1Njpyd_nWbNwxumzqJXwW5GhjkMftDVzW).

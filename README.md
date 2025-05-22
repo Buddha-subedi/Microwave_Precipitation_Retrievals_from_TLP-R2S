@@ -12,6 +12,53 @@ while conditioning the results to some atmospheric and surface-type variables.
 
 <p align="center"><em>Boosted tRansfer-leArning for precIpitatioN RetrievalS (B-RAINS) presents an ensemble learning architecture that stacks parallel XGBoost base learners and combines their inference through a meta-model. Step 1 detects the precipitation occurrence and phase, and Step 2 estimates the rain and snow rate, with the subscripts ``L'' and ``R'' denoting labels and rates of the data sets. The retrievals transfer the learning from ERA5 to satellite through incremental training of the base learners in both steps. After learning ERA5, the number of parallel trees, tree booster numbers, depths, and splitting nodes are frozen (FZ) for the top part of the decision trees.</em></p>
 
+<a name="4"></a> <br>
+## Code
+
+<a name="41"></a> <br>
+###   Setup
+
+```python
+import numpy as np
+import pandas as pd
+from pathlib import Path
+import xgboost as xgb
+import scipy.io
+import pmw_utils
+import importlib
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+import scipy.stats as stats
+from scipy.interpolate import interp1d
+importlib.reload(pmw_utils)
+from pmw_utils import plot_confusion_matrix, BRAINS_model
+```
+<a name="42"></a> <br>
+ ### Load the Data
+```python
+# Load the training data
+
+paths = {
+    'cpr': Path.cwd() / 'data' / 'df_cpr_phase.npz',
+    'dpr': Path.cwd() / 'data' / 'df_dpr_phase.npz',
+    'era5': Path.cwd() / 'data' / 'df_era5_phase.npz'
+}
+
+data = {k: np.load(p) for k, p in paths.items()}
+df_cpr_phase, df_dpr_phase, df_era5_phase = (pd.DataFrame({k: v[k] for k in v.files}) for v in data.values())
+
+for name, df, sep in zip(
+    ['ERA5 Samples for Classification', 'CPR Samples for Classification', 'DPR Samples for CLassification'],
+    [df_era5_phase, df_cpr_phase, df_dpr_phase],
+    ['##############################', '##############################', '']
+):
+    counts = df['Prcp flag'].value_counts().sort_index()
+    print(f"**{name}**\nTotal samples for classification: {len(df)}")
+    print(f"Clear: {counts.get(0,0)}, Rain: {counts.get(1,0)}, Snow: {counts.get(2,0)}")
+    if sep: print(sep)
+```
+
+
 To load the B-RAINS model, use the following code
 ```python
 model_dir = r'G:\Shared drives\SAFL Ebtehaj Group\Buddha Research\Research 1\model'

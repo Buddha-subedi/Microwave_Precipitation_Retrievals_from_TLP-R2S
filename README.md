@@ -49,7 +49,7 @@ data = {k: np.load(p) for k, p in paths.items()}
 df_cpr_phase, df_dpr_phase, df_era5_phase = (pd.DataFrame({k: v[k] for k in v.files}) for v in data.values())
 
 for name, df, sep in zip(
-    ['ERA5 Samples for Classification', 'CPR Samples for Classification', 'DPR Samples for CLassification'],
+    ['ERA5 Samples for Classification', 'CPR Samples for Classification', 'DPR Samples for Classification'],
     [df_era5_phase, df_cpr_phase, df_dpr_phase],
     ['##############################', '##############################', '']
 ):
@@ -73,7 +73,7 @@ for name, df, sep in zip(
 
 <a name="43"></a> <br>
  ### Train the B-RAINS Model
-B-RAINS Model has 4 base learners. The hyperparameters and snip of code adopted for stage 1 and stage 2 for the ERA5-CPR phase detection is provided below
+B-RAINS Model has 4 base learners. The hyperparameters and snippet of code adopted for stage 1 and stage 2 for the ERA5-CPR phase detection is provided below
 
 ```python
 #stage 1
@@ -119,7 +119,7 @@ params = {
 }
 
 # Train with the new data (booster here is the final model that is first trained on coarse
-# resolution information from ERA5 and then finetuned on fine resolution satellite information)
+# resolution information from ERA5 and then fine-tuned on fine resolution satellite information)
 booster = xgb.train(
     params,
     dtrain_cpr,

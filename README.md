@@ -97,6 +97,8 @@ booster_era5 = xgb.train(
     num_boost_round=93,
     verbose_eval=True
 )
+
+
 #stage 2
 classes = np.unique(df_70_train_cpr['Prcp flag'])                         
 class_weights = {0: 1, 1: 1.167, 2: 1.766}
@@ -133,16 +135,16 @@ booster = xgb.train(
 <a name="44"></a> <br>
  ### Load the B-RAINS model
 ```python
-model_dir = r'G:\Shared drives\SAFL Ebtehaj Group\Buddha Research\Research 1\model'
+model_dir = Path.cwd() / 'model'
 
 era5_dpr_base_learner = xgb.XGBClassifier()
-era5_dpr_base_learner.load_model(os.path.join(model_dir, 'classifier_incremental_dpr_optuna_maximize_min_f1.json'))
+era5_dpr_base_learner.load_model(os.path.join(model_dir, 'classifier_incremental_dpr.json'))
 
 era5_cpr_base_learner = xgb.XGBClassifier()
-era5_cpr_base_learner.load_model(os.path.join(model_dir, 'classifier_incremental_cpr_optuna_maximize_min_f1.json'))
+era5_cpr_base_learner.load_model(os.path.join(model_dir, 'classifier_incremental_cpr.json'))
 
 meta_model = xgb.XGBClassifier()
-meta_model.load_model(os.path.join(model_dir, 'incremental_meta_both_point_zero_one.json'))
+meta_model.load_model(os.path.join(model_dir, 'incremental_meta.json'))
 
 snow_rate_booster_tl = xgb.Booster()
 snow_rate_booster_tl.load_model(os.path.join(model_dir, 'xgb_tl_snow_rate.json'))
@@ -150,6 +152,10 @@ snow_rate_booster_tl.load_model(os.path.join(model_dir, 'xgb_tl_snow_rate.json')
 rain_rate_booster_tl = xgb.Booster()
 rain_rate_booster_tl.load_model(os.path.join(model_dir, 'xgb_tl_rain_rate.json'))
 ```
+<div style="text-align: center;">
+    <img src="images\Fig_02.png" alt="Training for Savannas land cover type" width="300"/>
+    <p><em>F1 score of Snow for ERA5 and CPR datasets during the training in Stage 2.</em></p>
+</div>
 
 ## Dataset
 The dataset for training the networks and retrieving sample orbits is available [here](https://drive.google.com/drive/u/0/folders/1Njpyd_nWbNwxumzqJXwW5GhjkMftDVzW).

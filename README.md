@@ -6,7 +6,7 @@ into the retrieval process and allows the fusion of multi-satellite observations
 while conditioning the results to some atmospheric and surface-type variables.
 
 <p align="center">
-  <img src="images/Fig_01.png" width="600" />
+  <img src="images/Fig_01.png" width="700" />
 </p>
 
 <p align="center"><em>Boosted tRansfer-leArning for precIpitatioN RetrievalS (B-RAINS) presents an ensemble learning architecture that stacks parallel XGBoost base learners and combines their inference through a meta-model. Step 1 detects the precipitation occurrence and phase, and Step 2 estimates the rain and snow rate, with the subscripts ``L'' and ``R'' denoting labels and rates of the data sets. The retrievals transfer the learning from ERA5 to satellite through incremental training of the base learners in both steps. After learning ERA5, the number of parallel trees, tree booster numbers, depths, and splitting nodes are frozen (FZ) for the top part of the decision trees.</em></p>

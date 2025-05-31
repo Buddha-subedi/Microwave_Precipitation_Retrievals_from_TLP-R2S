@@ -158,82 +158,111 @@ def get_actual_from_prediction(y_pred_array):
 
 
 
-def BRAINS_model(mat_file, era5_dpr_base_learner, era5_cpr_base_learner, meta_model, 
-                     snow_rate_booster_tl, rain_rate_booster_tl, 
-                     df_cdf_match_rain, df_cdf_match_snow):
+cdf_mapping = None
+def learn_cdf_mapping(y, x):
+    import scipy.stats as stats
+    from scipy.interpolate import interp1d
+    import pandas as pd
+    import numpy as np
+    global cdf_mapping
+
+    y_series = pd.Series(y)
+    x_lrn = pd.Series(x)
+    y_series = y_series.clip(lower=x_lrn.min())
+
+    cumfreq_pred = stats.cumfreq(y_series, numbins=min(len(y_series), 4000))
+    Fi1 = cumfreq_pred.cumcount
+    xi1 = cumfreq_pred.lowerlimit + np.arange(len(Fi1)) * cumfreq_pred.binsize
+    Fi1 = Fi1 / max(Fi1)
+
+    cumfreq_actual = stats.cumfreq(x_lrn, numbins=min(len(x_lrn), 4000))
+    Fi2 = cumfreq_actual.cumcount
+    xi2 = cumfreq_actual.lowerlimit + np.arange(len(Fi2)) * cumfreq_actual.binsize
+    Fi2 = Fi2 / max(Fi2)  
+
+
+    def enforce_increasing(x, f):
+        x, idx = np.unique(x, return_index=True)  
+        f = f[idx]
+        if len(x) > 1 and np.any(np.diff(x) == 0):  
+            x += np.linspace(1e-10, 1e-8, num=len(x))  
+        return x, f
+
+    xi1, Fi1 = enforce_increasing(xi1, Fi1)
+    xi2, Fi2 = enforce_increasing(xi2, Fi2)
+
+    if len(xi1) < 2 or len(xi2) < 2:
+        raise ValueError("Interpolation failed: xi1 or xi2 has fewer than 2 unique values. Check input distributions.")
+
+    # Store interpolation functions
+    cdf_mapping = {
+        "pred_to_cdf": interp1d(xi1, Fi1, kind='linear', fill_value="extrapolate", assume_sorted=True),
+        "cdf_to_actual": interp1d(Fi2, xi2, kind='linear', fill_value="extrapolate", assume_sorted=True),
+    }
+
+def get_actual_from_prediction(y_pred_array):
+    import numpy as np
+    global cdf_mapping
+    if cdf_mapping is None:
+        raise ValueError("CDF mapping has not been learned yet. Call learn_cdf_mapping(y, x) first.")
+
+    cdf_values = cdf_mapping["pred_to_cdf"](y_pred_array)
+
+    actual_values = cdf_mapping["cdf_to_actual"](cdf_values)
+
+    actual_values = np.where(np.isnan(actual_values), 0.0, actual_values)
+    actual_values = np.where(actual_values < 0, 0.001, actual_values)
+
+    return actual_values
+
+
+
+
+def BRAINS_model(path_orbit, era5_dpr_base_learner, era5_cpr_base_learner, meta_model, 
+                     snow_rate_booster, rain_rate_booster, 
+                     df_cdf_rain, df_cdf_snow):
     import xgboost as xgb
     import scipy.io
     import numpy as np
     import pandas as pd
+    npz = np.load(path_orbit_004780)
+    flattened_dict = {key: npz[key].ravel() for key in npz.files}
+    df = pd.DataFrame(flattened_dict)
+    df.replace([np.inf, -np.inf], np.nan, inplace=True)
 
-    snowr_input = ['10v', '10h', '18v', '18h','23v','36v', '36h', '89v', '89h', 
-                   '166v', '166h','183-3', '183-7', 'tciw','tclw','tcwv','t2m','cape',
-                   'u10', 'v10','cin', 'skt','asn', 'rsn', 'sd', 'tcslw','tcw','swvl1',
-                   'lsm', 'siconc', 'Latitude','Longitude', 'Month', 'Day', 
-                   'mean_aspect', 'elevation_mean']
+    row_dimension, column_dimension = npz['10v'].shape
+    latitude = npz['Latitude']
+    longitude = npz['Longitude']
+
+
 
     input_vars = ['10v', '10h', '18v', '18h','23v','36v', '36h', '89v', '89h', '166v', '166h','183-3', '183-7',
-                        'tciw','tclw','tcwv','t2m','cape','u10', 'v10', 'skt','asn', 'rsn', 'cin', 
+              'tciw','tclw','tcwv','t2m','cape','u10', 'v10', 'skt','asn', 'rsn', 'cin',
               'sd', 'tcslw','tcw','swvl1','lsm', 'siconc', 'Latitude','Longitude', 'Month', 'Day', 'mean_aspect', 'elevation_mean']
 
-    x_snow_rate = df_cdf_match_snow[snowr_input]
+    x_snow_rate = df_cdf_snow[input_vars]
     dtest_sr = xgb.DMatrix(x_snow_rate)
-    y_snow_rate = snow_rate_booster_tl.predict(dtest_sr)
-    y_actual_snow_rate = df_cdf_match_snow['cdf_snow'].values
+    y_snow_rate = snow_rate_booster.predict(dtest_sr)
+    y_actual_snow_rate = df_cdf_snow['cdf_snow'].values
 
-    x_rain_rate = df_cdf_match_rain[snowr_input]
+    x_rain_rate = df_cdf_rain[input_vars]
     dtest_rr = xgb.DMatrix(x_rain_rate)
-    y_rain_rate = rain_rate_booster_tl.predict(dtest_rr)
-    y_actual_rain_rate = df_cdf_match_rain['cdf_rain'].values
-
-    print(f"Processing file: {mat_file}...")
-    mat = scipy.io.loadmat(mat_file)
-    X_data = mat['X'][0,0]
-    a = X_data['ERA5_WVP']
-    row_dimension, column_dimension = a.shape
-    print('Row dimension is:')
-    print(row_dimension)
-    print('Column dimension is:')
-    print(column_dimension)
-    latitude= X_data['LatS2']
-    longitude= X_data['LonS2']
-
-    columns_and_arrays = {
-        '10v': X_data['TbS1'][:, :, 0], '10h': X_data['TbS1'][:, :, 1],
-        '18v': X_data['TbS1'][:, :, 2], '18h': X_data['TbS1'][:, :, 3],
-        '23v': X_data['TbS1'][:, :, 4], '36v': X_data['TbS1'][:, :, 5],
-        '36h': X_data['TbS1'][:, :, 6], '89v': X_data['TbS1'][:, :, 7],
-        '89h': X_data['TbS1'][:, :, 8], '166v': X_data['TbS2'][:, :, 0],
-        '166h': X_data['TbS2'][:, :, 1], '183-3': X_data['TbS2'][:, :, 2],
-        '183-7': X_data['TbS2'][:, :, 3], 'tciw': X_data['ERA5_IWP'],
-        'tclw': X_data['ERA5_LWP'], 'tcwv': X_data['ERA5_WVP'],
-        't2m': X_data['ERA5_t2m'], 'cape': X_data['ERA5_CAPE'],
-        'u10': X_data['ERA5_u10'], 'v10': X_data['ERA5_v10'],
-        'cin': X_data['ERA5_cin'], 'skt': X_data['ERA5_skt'],
-        'asn': X_data['ERA5_asn'], 'rsn': X_data['ERA5_rsn'],
-        'sd': X_data['ERA5_sd'], 'tcslw': X_data['ERA5_tcslw'],
-        'tcw': X_data['ERA5_tcw'], 'swvl1': X_data['ERA5_swvl1'],
-        'lsm': X_data['ERA5_lsm'], 'siconc': X_data['ERA5_siconc'],
-        'Latitude': X_data['LatS2'], 'Longitude': X_data['LonS2'],
-        'Month': np.repeat(X_data['Month'], X_data['LatS2'].shape[0]),
-        'Day': np.repeat(X_data['Day'], X_data['LatS2'].shape[0]),
-        'mean_aspect': X_data['DEM_aspect_mean'], 
-        'elevation_mean': X_data['DEM_elevation_mean']
-    }
-
-    df = pd.DataFrame({col: arr.flatten() for col, arr in columns_and_arrays.items()})
+    y_rain_rate = rain_rate_booster.predict(dtest_rr)
+    y_actual_rain_rate = df_cdf_rain['cdf_rain'].values
 
 
     x = df[input_vars]
-    dpr_pred_proba = era5_dpr_base_learner.predict_proba(x)
-    df['dp0'], df['dp1'], df['dp2'] = dpr_pred_proba[:, 0], dpr_pred_proba[:, 1], dpr_pred_proba[:, 2]
+    d_x = xgb.DMatrix(x)
+    dpr_pred_proba = era5_dpr_base_learner.predict(d_x)
+    df['dpr_p0'], df['dpr_p1'], df['dpr_p2'] = dpr_pred_proba[:, 0], dpr_pred_proba[:, 1], dpr_pred_proba[:, 2]
 
-    cpr_pred_proba = era5_cpr_base_learner.predict_proba(x)
-    df['dp0_cpr'], df['dp1_cpr'], df['dp2_cpr'] = cpr_pred_proba[:, 0], cpr_pred_proba[:, 1], cpr_pred_proba[:, 2]
+    cpr_pred_proba = era5_cpr_base_learner.predict(d_x)
+    df['cpr_p0'], df['cpr_p1'], df['cpr_p2'] = cpr_pred_proba[:, 0], cpr_pred_proba[:, 1], cpr_pred_proba[:, 2]
 
-    meta_input = ['dp0', 'dp1', 'dp2', 'dp0_cpr', 'dp1_cpr', 'dp2_cpr']
+    meta_input = ['dpr_p0', 'dpr_p1', 'dpr_p2', 'cpr_p0', 'cpr_p1', 'cpr_p2']
     x_train_meta = df[meta_input]
-    y_proba_pred = meta_model.predict_proba(x_train_meta)
+    dx_meta = xgb.DMatrix(x_train_meta)
+    y_proba_pred = meta_model.predict(dx_meta)
     y_phase_pred = y_proba_pred.argmax(axis=1)
 
     df['pred_phase'] = y_phase_pred
@@ -242,9 +271,9 @@ def BRAINS_model(mat_file, era5_dpr_base_learner, era5_cpr_base_learner, meta_mo
 
     # Snow rate estimation
     df_snowr = df[df['pred_phase'] == 2]
-    x_rate = df_snowr[snowr_input]
+    x_rate = df_snowr[input_vars]
     dtest_sr = xgb.DMatrix(x_rate)
-    y_snow_rate_pred = snow_rate_booster_tl.predict(dtest_sr)
+    y_snow_rate_pred = snow_rate_booster.predict(dtest_sr)
     learn_cdf_mapping(y_snow_rate, y_actual_snow_rate)
     y_snow_rate_pred = np.clip(y_snow_rate_pred, np.min(y_snow_rate), np.max(y_snow_rate))
     actual_snow_values = get_actual_from_prediction(y_snow_rate_pred)
@@ -252,9 +281,9 @@ def BRAINS_model(mat_file, era5_dpr_base_learner, era5_cpr_base_learner, meta_mo
 
     # Rain rate estimation
     df_rainr = df[df['pred_phase'] == 1]
-    x_rain_rate = df_rainr[snowr_input]
+    x_rain_rate = df_rainr[input_vars]
     dtest_rr = xgb.DMatrix(x_rain_rate)
-    y_rain_rate_pred = rain_rate_booster_tl.predict(dtest_rr)
+    y_rain_rate_pred = rain_rate_booster.predict(dtest_rr)
     learn_cdf_mapping(y_rain_rate, y_actual_rain_rate)
     y_rain_rate_pred = np.clip(y_rain_rate_pred, np.min(y_rain_rate), np.max(y_rain_rate))
     actual_rain_values = get_actual_from_prediction(y_rain_rate_pred)
@@ -274,7 +303,6 @@ def BRAINS_model(mat_file, era5_dpr_base_learner, era5_cpr_base_learner, meta_mo
             k += 1
 
     return phase, rain, snow, latitude, longitude  
-
 
 
 

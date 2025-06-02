@@ -16,17 +16,27 @@ while conditioning the results to some atmospheric and surface-type variables.
 
 <a name="41"></a> <br>
 ###   Setup
+To run this notebook on Google Colab, clone this repository
+```python
+!git clone https://github.com/Buddha-subedi/Microwave_Precipitation_Retrievals_from_B-RAINS.git
+os.chdir("Microwave_Precipitation_Retrievals_from_B-RAINS")
+```
+
 
 ```python
 import numpy as np
 import pandas as pd
+from sklearn.utils import shuffle
 from pathlib import Path
 import xgboost as xgb
+import os
 import scipy.io
 import pmw_utils
 import importlib
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, mean_squared_error
 import scipy.stats as stats
 from scipy.interpolate import interp1d
 importlib.reload(pmw_utils)

@@ -225,7 +225,7 @@ def BRAINS_model(path_orbit, era5_dpr_base_learner, era5_cpr_base_learner, meta_
     import scipy.io
     import numpy as np
     import pandas as pd
-    npz = np.load(path_orbit_004780)
+    npz = np.load(path_orbit)
     flattened_dict = {key: npz[key].ravel() for key in npz.files}
     df = pd.DataFrame(flattened_dict)
     df.replace([np.inf, -np.inf], np.nan, inplace=True)

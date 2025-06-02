@@ -89,7 +89,7 @@ booster_era5 = xgb.train(
     params=params,
     dtrain=dtrain,
     evals=evals,
-    num_boost_round=93,
+    num_boost_round=30,
     verbose_eval=True
 )
 
@@ -99,7 +99,7 @@ classes = np.unique(df_70_train_cpr['Prcp flag'])
 class_weights = {0: 1, 1: 1.167, 2: 1.766}
 sample_weights_70 = df_70_train_cpr['Prcp flag'].map(lambda x: class_weights[classes.tolist().index(x)])
 # Set parameters
-params = {
+params_1 = {
     'objective': 'multi:softmax',
     'num_class': 3,
     'eval_metric': 'merror',
@@ -113,24 +113,40 @@ params = {
     'verbosity': 0
 }
 
+booster_era5 = xgb.train(
+    params=params_1,
+    dtrain=dtrain_era5,
+    evals=evals,
+    num_boost_round=30,
+    verbose_eval=True
+)
+
 # Train with the new data (booster here is the final model that is first trained on coarse
 # resolution information from ERA5 and then fine-tuned on fine resolution satellite information)
-booster = xgb.train(
-    params,
+params_2 = {
+    'objective': 'multi:softprob',
+    'num_class': 3,
+    'eval_metric': 'merror',
+    'reg_alpha': 6.948,
+    'reg_lambda': 5.0278,
+    'max_depth': 15,
+    'num_parallel_tree': 6,
+    'learning_rate': 0.018,
+    'gamma': 0.32,
+    'verbosity': 0
+}
+
+booster_cpr = xgb.train(
+    params_2,
     dtrain_cpr,
-    num_boost_round=182,
+    num_boost_round=80,
     evals=evals,
     xgb_model=booster_era5,
     verbose_eval=True,
     feval=f1_eval_all_classes
 )
 ```
-<p align="center">
-  <img src="images/Fig_02.png" alt="Training for ERA5-CPR classifier base learner" width="300" />
-</p>
-<p align="center">
-  <em>F1 score of Snow for ERA5 and CPR datasets during the training in Stage 2.</em>
-</p>
+
 
 
 <a name="44"></a> <br>

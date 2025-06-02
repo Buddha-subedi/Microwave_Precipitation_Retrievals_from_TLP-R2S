@@ -46,38 +46,24 @@ from pmw_utils import plot_confusion_matrix, BRAINS_model
  ### Load the Data
  
 ```python
-# Load the training data
-
-paths = {
-    'cpr': Path.cwd() / 'data' / 'df_cpr_phase.npz',
-    'dpr': Path.cwd() / 'data' / 'df_dpr_phase.npz',
-    'era5': Path.cwd() / 'data' / 'df_era5_phase.npz'
+paths_phase = {
+    'cpr_train': 'data/df_cpr_phase_train.npz',
+    'cpr_test':  'data/df_cpr_phase_test.npz',
+    'dpr_train': 'data/df_dpr_phase_train.npz',
+    'dpr_test':  'data/df_dpr_phase_test.npz',
+    'era5_train': 'data/df_era5_phase_train.npz',
+    'era5_test':  'data/df_era5_phase_test.npz'
 }
-
-data = {k: np.load(p) for k, p in paths.items()}
-df_cpr_phase, df_dpr_phase, df_era5_phase = (pd.DataFrame({k: v[k] for k in v.files}) for v in data.values())
-
-for name, df, sep in zip(
-    ['ERA5 Samples for Classification', 'CPR Samples for Classification', 'DPR Samples for Classification'],
-    [df_era5_phase, df_cpr_phase, df_dpr_phase],
-    ['##############################', '##############################', '']
-):
-    counts = df['Prcp flag'].value_counts().sort_index()
-    print(f"**{name}**\nTotal samples for classification: {len(df)}")
-    print(f"Clear: {counts.get(0,0)}, Rain: {counts.get(1,0)}, Snow: {counts.get(2,0)}")
-    if sep: print(sep)
+data = {k: np.load(p) for k, p in paths_phase.items()}
+dfs = {k: pd.DataFrame(dict(v)) for k, v in data.items()}
+df_cpr_phase_train = dfs['cpr_train']
+df_cpr_phase_test  = dfs['cpr_test']
+df_dpr_phase_train = dfs['dpr_train']
+df_dpr_phase_test  = dfs['dpr_test']
+df_era5_phase_train = dfs['era5_train']
+df_era5_phase_test  = dfs['era5_test']
 ```
-    **ERA5 Samples for Classification**
-    Total samples for classification: 7000000
-    Clear: 3500000, Rain: 2500000, Snow: 1000000
-    ##############################
-    **CPR Samples for Classification**
-    Total samples for classification: 240800
-    Clear: 120400, Rain: 86000, Snow: 34400
-    ##############################
-    **DPR Samples for Classification**
-    Total samples for classification: 2800000
-    Clear: 1400000, Rain: 1000000, Snow: 400000
+
 
 
 <a name="43"></a> <br>

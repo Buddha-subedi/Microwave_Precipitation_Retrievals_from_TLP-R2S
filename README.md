@@ -148,34 +148,12 @@ booster_cpr = xgb.train(
 ```
 
 
-
 <a name="44"></a> <br>
- ### Load the B-RAINS model
-```python
-model_dir = Path.cwd() / 'model'
-
-era5_dpr_base_learner = xgb.XGBClassifier()
-era5_dpr_base_learner.load_model(os.path.join(model_dir, 'classifier_incremental_dpr.json'))
-
-era5_cpr_base_learner = xgb.XGBClassifier()
-era5_cpr_base_learner.load_model(os.path.join(model_dir, 'classifier_incremental_cpr.json'))
-
-meta_model = xgb.XGBClassifier()
-meta_model.load_model(os.path.join(model_dir, 'incremental_meta.json'))
-
-snow_rate_booster_tl = xgb.Booster()
-snow_rate_booster_tl.load_model(os.path.join(model_dir, 'xgb_tl_snow_rate.json'))
-
-rain_rate_booster_tl = xgb.Booster()
-rain_rate_booster_tl.load_model(os.path.join(model_dir, 'xgb_tl_rain_rate.json'))
-```
-
-<a name="45"></a> <br>
  ### Orbital Retrievals
 ```python
-[phase, rain, snow, latitude, longitude] = BRAINS_model(file_path, era5_dpr_base_learner, era5_cpr_base_learner, meta_model, 
-                     snow_rate_booster_tl, rain_rate_booster_tl, 
-                     df_cdf_match_rain, df_cdf_match_snow);
+[phase, rain, snow, latitude, longitude] = BRAINS_model(path_orbit_004780, booster_cpr, booster_dpr, meta_model,
+                     snow_rate_booster, rain_rate_booster,
+                     df_cdf_rain, df_cdf_snow);
 ```
 <p align="center">
   <img src="images/Fig_08.png" alt="Training for ERA5-CPR classifier base learner" width="700" />

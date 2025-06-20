@@ -9,7 +9,7 @@ while conditioning the results to some atmospheric and surface-type variables.
   <img src="images/Fig_01.png" width="700" />
 </p>
 
-<p align="center"><em>Boosted tRansfer-leArning for precIpitatioN RetrievalS (B-RAINS) presents an ensemble learning architecture that stacks parallel XGBoost base learners and combines their inference through a meta-model. Step 1 detects the precipitation occurrence and phase, and Step 2 estimates the rain and snow rate, with the subscripts ``L'' and ``R'' denoting labels and rates of the data sets. The retrievals transfer the learning from ERA5 to satellite through incremental training of the base learners in both steps. After learning ERA5, the number of parallel trees, tree booster numbers, depths, and splitting nodes are frozen (FZ) for the top part of the decision trees.</em></p>
+<p align="center"><em>Boosted Knowledge Transfer for Precipitation Retrievals (BKnoT-PR) presents an ensemble learning architecture that stacks parallel XGBoost base learners and combines their inference through a meta-model. Step 1 detects the precipitation occurrence and phase, and Step 2 estimates the rain and snow rate, with the subscripts ``L'' and ``R'' denoting labels and rates of the data sets. The retrievals transfer the learning from ERA5 to satellite through incremental training of the base learners in both steps. After learning ERA5, the number of parallel trees, tree booster numbers, depths, and splitting nodes are frozen (FZ) for the top part of the decision trees.</em></p>
 
 <a name="4"></a> <br>
 ## Code
@@ -18,8 +18,8 @@ while conditioning the results to some atmospheric and surface-type variables.
 ###   Setup
 To run this notebook on Google Colab, clone this repository
 ```python
-!git clone https://github.com/Buddha-subedi/Microwave_Precipitation_Retrievals_from_B-RAINS.git
-os.chdir("Microwave_Precipitation_Retrievals_from_B-RAINS")
+!git clone https://github.com/Buddha-subedi/Microwave_Precipitation_Retrievals_from_BKnoT-PR.git
+os.chdir("Microwave_Precipitation_Retrievals_from_BKnoT-PR")
 ```
 
 

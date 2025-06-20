@@ -218,7 +218,7 @@ def get_actual_from_prediction(y_pred_array):
 
 
 
-def BRAINS_model(path_orbit, era5_dpr_base_learner, era5_cpr_base_learner, meta_model, 
+def TLPR2S_model(path_orbit, era5_dpr_base_learner, era5_cpr_base_learner, meta_model, 
                      snow_rate_booster, rain_rate_booster, 
                      df_cdf_rain, df_cdf_snow):
     import xgboost as xgb

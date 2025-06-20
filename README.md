@@ -1,7 +1,7 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Buddha-subedi/Microwave_Precipitation_Retrievals_from_B-RAINS/blob/main/B-RAINS_demo.ipynb)
-# Boosted Knowledge Transfer for Passive Microwave Precipitation Retrievals
+# Transfer Learning of Global Precipitation from Reanalysis Data to Satellite Observations
 
-This repository represents the development of an algorithm, called the Boosted tRansfer-leArning for PMW precipitatioN Retrievals(B-RAINS). The algorithm relies on integrating the information content from Earth System Models (ESMs)
+This repository represents the development of an algorithm, called the Transfer Learning of global Precipitation from Reanalysis data to Satellite observations(TLP-R2S). The algorithm relies on integrating the information content from Earth System Models (ESMs)
 into the retrieval process and allows the fusion of multi-satellite observations across varying spatial and temporal resolutions through meta-model learning. The algorithm first detects the precipitation phase and then estimates its rate,
 while conditioning the results to some atmospheric and surface-type variables.
 
@@ -9,7 +9,7 @@ while conditioning the results to some atmospheric and surface-type variables.
   <img src="images/Fig_01.png" width="700" />
 </p>
 
-<p align="center"><em>Boosted Knowledge Transfer for Precipitation Retrievals (BKnoT-PR) presents an ensemble learning architecture that stacks parallel XGBoost base learners and combines their inference through a meta-model. Step 1 detects the precipitation occurrence and phase, and Step 2 estimates the rain and snow rate, with the subscripts ``L'' and ``R'' denoting labels and rates of the data sets. The retrievals transfer the learning from ERA5 to satellite through incremental training of the base learners in both steps. After learning ERA5, the number of parallel trees, tree booster numbers, depths, and splitting nodes are frozen (FZ) for the top part of the decision trees.</em></p>
+<p align="center"><em>Transfer Learning of global Precipitation from Reanalysis data to Satellite observations(TLP-R2S) presents an ensemble learning architecture that stacks parallel XGBoost base learners and combines their inference through a meta-model. Step 1 detects the precipitation occurrence and phase, and Step 2 estimates the rain and snow rate, with the subscripts ``L'' and ``R'' denoting labels and rates of the data sets. The retrievals transfer the learning from ERA5 to satellite through incremental training of the base learners in both steps. After learning ERA5, the number of parallel trees, tree booster numbers, depths, and splitting nodes are frozen (FZ) for the top part of the decision trees.</em></p>
 
 <a name="4"></a> <br>
 ## Code

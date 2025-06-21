@@ -307,7 +307,7 @@ def TLPR2S_model(path_orbit, era5_dpr_base_learner, era5_cpr_base_learner, meta_
 
 
 
-def BRAINS_model_mat(mat_file, era5_dpr_base_learner, era5_cpr_base_learner, meta_model, 
+def TLPR2S_model_mat(mat_file, era5_dpr_base_learner, era5_cpr_base_learner, meta_model, 
                      snow_rate_booster_tl, rain_rate_booster_tl, 
                      df_cdf_match_rain, df_cdf_match_snow):
 

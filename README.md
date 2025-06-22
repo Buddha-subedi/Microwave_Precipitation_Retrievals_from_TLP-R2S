@@ -1,4 +1,4 @@
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Buddha-subedi/Microwave_Precipitation_Retrievals_from_B-RAINS/blob/main/B-RAINS_demo.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Buddha-subedi/Microwave_Precipitation_Retrievals_from_TLP-R2S/blob/main/TLP-R2S_demo.ipynb)
 # Transfer Learning of Global Precipitation from Reanalysis Data to Satellite Observations
 
 This repository represents the development of an algorithm, called the Transfer Learning of global Precipitation from Reanalysis data to Satellite observations(TLP-R2S). The algorithm relies on integrating the information content from Earth System Models (ESMs)

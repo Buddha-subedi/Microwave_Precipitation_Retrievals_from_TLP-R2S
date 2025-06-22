@@ -18,8 +18,8 @@ while conditioning the results to some atmospheric and surface-type variables.
 ###   Setup
 To run this notebook on Google Colab, clone this repository
 ```python
-!git clone https://github.com/Buddha-subedi/Microwave_Precipitation_Retrievals_from_BKnoT-PR.git
-os.chdir("Microwave_Precipitation_Retrievals_from_BKnoT-PR")
+!git clone https://github.com/Buddha-subedi/Microwave_Precipitation_Retrievals_from_TLP-R2S.git
+os.chdir("Microwave_Precipitation_Retrievals_from_TLP-R2S")
 ```
 
 
@@ -67,8 +67,8 @@ df_era5_phase_test  = dfs['era5_test']
 
 
 <a name="43"></a> <br>
- ### Train the B-RAINS Model
-B-RAINS Model has 4 base learners. The hyperparameters and snippet of code adopted for stage 1 and stage 2 for the ERA5-CPR phase detection is provided below
+ ### Train the TLP-R2S Model
+TLP-R2S Model has 4 base learners. The hyperparameters and snippet of code adopted for stage 1 and stage 2 for the ERA5-CPR phase detection is provided below
 
 ```python
 #stage 1
@@ -151,7 +151,7 @@ booster_cpr = xgb.train(
 <a name="44"></a> <br>
  ### Orbital Retrievals
 ```python
-[phase, rain, snow, latitude, longitude] = BRAINS_model(path_orbit_004780, booster_cpr, booster_dpr, meta_model,
+[phase, rain, snow, latitude, longitude] = TLPR2S_model(path_orbit_004780, booster_cpr, booster_dpr, meta_model,
                      snow_rate_booster, rain_rate_booster,
                      df_cdf_rain, df_cdf_snow);
 ```

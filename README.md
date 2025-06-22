@@ -159,7 +159,7 @@ booster_cpr = xgb.train(
   <img src="images/Fig_08.png" alt="Training for ERA5-CPR classifier base learner" width="700" />
 </p>
 <p align="center">
-  <em>Brightness temperatures from GMI (a–d) and precipitation retrievals from B-RAINS (e), GPROF (f), DPR (g), and ERA5 (h) for orbit 044780 on January 15, 2022, capturing an extratropical cyclone over the North Atlantic Ocean and the Canadian provinces of Nova Scotia and New Brunswick.</em>
+  <em>Brightness temperatures from GMI (a–d) and precipitation retrievals from TLP-R2S (e), GPROF (f), DPR (g), and ERA5 (h) for orbit 044780 on January 15, 2022, capturing an extratropical cyclone over the North Atlantic Ocean and the Canadian provinces of Nova Scotia and New Brunswick.</em>
 </p>
 
 

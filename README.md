@@ -40,7 +40,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, mean_squ
 import scipy.stats as stats
 from scipy.interpolate import interp1d
 importlib.reload(pmw_utils)
-from pmw_utils import plot_confusion_matrix, BRAINS_model
+from pmw_utils import plot_confusion_matrix, TLPR2S_model
 ```
 <a name="42"></a> <br>
  ### Load the Data

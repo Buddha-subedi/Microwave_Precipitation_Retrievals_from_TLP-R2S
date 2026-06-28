@@ -160,7 +160,7 @@ booster_cpr = xgb.train(
   <img src="images/Fig_04.png" alt="Training for ERA5-CPR classifier base learner" width="700" />
 </p>
 <p align="center">
-  <em>Three selected GMI TBs (a--c) and precipitation from MRMS (d), TLP-R2S (e), and GPROF (f) for orbit 045821 on March 23, 2022, over the Midwest United States. Likewise, selected GMI TBs (g--i) and corresponding MRMS (j), TLP-R2S (k), and GPROF (l) precipitation for orbit 045212 on February 11, 2022, over Colorado and Wyoming.</em>
+  <em>Four selected GMI TBs (a--d) and precipitation from MRMS (e), TLP-R2S (f), GPROF (g), and ERA5 (h) for orbit 045821 on March 23, 2022, over the Midwest United States. Likewise, selected GMI TBs (i--l) and corresponding MRMS (m), TLP-R2S (n), GPROF (o), and ERA5 (p) precipitation for orbit 045212 on February 11, 2022, over Colorado and Wyoming in the United States.</em>
 </p>
 
 
